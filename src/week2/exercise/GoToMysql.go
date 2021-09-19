@@ -1,21 +1,18 @@
 package exercise
 
 import (
-
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 )
 
-
-
 // 用户结构体
 type User struct {
-	UserId int `db:"user_id"`
+	UserId   int    `db:"user_id"`
 	Username string `db:"username"`
-	Sex string `db:"sex"`
-	Email string `db:"email"`
+	Sex      string `db:"sex"`
+	Email    string `db:"email"`
 }
 
 // 数据库指针
@@ -30,40 +27,36 @@ func init() {
 	db = database
 }
 
-
-
 func main() {
-
 
 	//u := User{1,"user01","man","user01@163.com"}
 	//err := save (u )
 	//fmt.Println(err)
 
 	userList, err := findById(15)
-	if (err != nil) {
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(userList)
 
 }
 
-func save (u User) error {
+func save(u User) error {
 
 	sql := "insert into user(id,username,sex,email)values(?,?,?)"
 
 	//执行sql语句
 	r, err := db.Exec(sql, u.UserId, u.Username, u.Sex, u.Email)
 	fmt.Println(r.LastInsertId())
-	return errors.Wrap( err, "exec " + sql + " failed")
+	return errors.Wrap(err, "exec "+sql+" failed")
 }
 
-
-func findById (id int) ([]User, error) {
+func findById(id int) ([]User, error) {
 	var user []User
 	sql := "select user_id, username,sex,email from user where user_id=? "
 	err := db.Select(&user, sql, id)
 	if err != nil {
-		return user, errors.Wrap( err, "exec " + sql + " failed")
+		return user, errors.Wrap(err, "exec "+sql+" failed")
 	}
 	return user, nil
 }
@@ -74,33 +67,32 @@ func updateUserName(userName string, userId int) (int64, error) {
 	res, err := db.Exec(sql, userName, userId)
 
 	if err != nil {
-		return 0, errors.Wrap( err, "exec " + sql + " failed")
+		return 0, errors.Wrap(err, "exec "+sql+" failed")
 	}
 
 	//查询影响的行数，判断修改插入成功
 	row, err := res.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap( err, "exec " + sql + " rows failed")
+		return 0, errors.Wrap(err, "exec "+sql+" rows failed")
 	}
 
 	return row, nil
 }
 
-func deleteById(userId int ) (int64, error) {
+func deleteById(userId int) (int64, error) {
 	sql := "delete from user where user_id=?"
 
 	res, err := db.Exec(sql, userId)
 	if err != nil {
-		return 0, errors.Wrap( err, "exec " + sql + " failed")
+		return 0, errors.Wrap(err, "exec "+sql+" failed")
 	}
 
 	row, err := res.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap( err, "exec " + sql + " rows failed")
+		return 0, errors.Wrap(err, "exec "+sql+" rows failed")
 	}
 	return row, nil
 }
-
 
 func testTransaction() {
 	//开启事务
@@ -115,7 +107,7 @@ func testTransaction() {
 
 	if err != nil {
 		fmt.Println("exec failed, ", err)
-		conn.Rollback()      //出现异常，进行回滚操作
+		conn.Rollback() //出现异常，进行回滚操作
 		return
 	}
 

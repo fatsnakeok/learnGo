@@ -6,7 +6,7 @@ import (
 )
 
 type MyError struct {
-	Msg string
+	Msg  string
 	File string
 	Line int
 }
@@ -16,17 +16,17 @@ func (e *MyError) Error() string {
 }
 
 func test() error {
-	return &MyError{"Someting happended","server.go",42}
+	return &MyError{"Someting happended", "server.go", 42}
 }
 
 func main() {
 	err := test()
 	// 判断error的类型
-	switch  err := err.(type) {
+	switch err := err.(type) {
 	case nil:
 		// call succeeded, nothing to do
 	case *MyError:
-			fmt.Println("error occurred on line:", err.Line)
+		fmt.Println("error occurred on line:", err.Line)
 	default:
 		// unknown error
 		fmt.Println("unknown error")
@@ -41,6 +41,5 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Fprintf: %v\n", err)
 	}
 	fmt.Printf("%d bytes written.\n", n)
-
 
 }

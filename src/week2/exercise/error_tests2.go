@@ -4,7 +4,6 @@ import (
 	"fmt"
 )
 
-
 type errorString1 struct {
 	s string
 }
